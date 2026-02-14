@@ -1,8 +1,7 @@
 [package]
 name = "liaise"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
-
 
 license = "MIT OR Apache-2.0"
 description = "diagnostic error propagation"
@@ -12,4 +11,15 @@ repository = "https://github.com/jameshuntt/liaise"
 
 readme = "readme.md"
 
+[features]
+default = []
+syn-error = ["dep:syn", "dep:proc-macro2", "dep:quote"]
+
 [dependencies]
+syn = { version = "2.0.114", optional = true }
+proc-macro2 = { version = "1.0.106", optional = true }
+quote = { version = "1.0.44", optional = true }
+liaise_derive = "0.1.0"
+
+[package.metadata.docs.rs]
+all-features = true
