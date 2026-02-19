@@ -6,19 +6,14 @@
             $($variant:ident = $code:expr => $msg:expr),* $(,)?
         }
     ) => {
-        use liaise::{Liaise, RegisterErrors};
-
-        #[derive(RegisterErrors)]
+        #[derive($crate::RegisterErrors, Copy, Clone)]
         #[error_prefix = $prefix]
         pub enum $name {
             $($variant = $code),*
         }
 
-        impl Liaise for $name {
-            fn code_id(self) -> u16 {
-                self as u16
-            }
-
+        impl $crate::Liaise for $name {
+            fn code_id(self) -> u16 { self as u16 }
             fn message(self) -> &'static str {
                 match self {
                     $(Self::$variant => $msg),*
@@ -26,9 +21,6 @@
             }
         }
     };
-}
-
-#[macro_export]macro_rules! register_liaise_errors_with_vis {
     (
         prefix: $prefix:expr,
         vis: $vis:vis,
@@ -37,7 +29,7 @@
             $($variant:ident = $code:expr => $msg:expr),* $(,)?
         }
     ) => {
-        #[derive(liaise::RegisterErrors)]
+        #[derive($crate::RegisterErrors, Copy, Clone)]
         #[error_prefix = $prefix]
         $vis enum $name {
             $($variant = $code),*
