@@ -4,6 +4,7 @@ extern crate alloc;
 pub mod adapters;
 pub mod diagnostic;
 pub mod loc;
+#[macro_use]pub mod macros;
 
 pub use diagnostic::{
     Combine,
