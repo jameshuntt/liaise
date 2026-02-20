@@ -1,6 +1,9 @@
 #![no_std]
 extern crate alloc;
 
+#[cfg(feature = "std")]
+extern crate std;
+
 extern crate self as liaise;
 
 pub mod adapters;
@@ -18,4 +21,4 @@ pub use diagnostic::{
 };
 pub use loc::DiagnosticLoc;
 
-pub use liaise_derive::{RegisterErrors};
+pub use liaise_derive::{LiaiseCodes, RegisterErrors};

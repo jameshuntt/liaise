@@ -2,8 +2,9 @@ use alloc::vec::Vec;
 use alloc::string::String;
 use crate::loc::DiagnosticLoc;
 
+#[cfg(feature = "std")]
 /// The "Static Blueprint": Focuses purely on the identity of the codes.
-pub trait ErrorRegistry: Copy + 'static {
+pub trait ErrorRegistry: 'static {
     const PREFIX: &'static str; // The macro fills this in
 
     const ALL_CODES: &'static [u16];
@@ -17,6 +18,23 @@ pub trait ErrorRegistry: Copy + 'static {
     };
 }
 
+#[cfg(not(feature = "std"))]
+/// The "Static Blueprint": Focuses purely on the identity of the codes.
+pub trait ErrorRegistry: Copy +'static {
+    const PREFIX: &'static str; // The macro fills this in
+
+    const ALL_CODES: &'static [u16];
+
+    /// The safety gate. If a user implements this trait, 
+    /// they are forced into a uniqueness check.
+    const VALIDATE: () = {
+        if !crate::validate_uniqueness(Self::ALL_CODES) {
+            panic!("LIAISE ERROR: Duplicate ID detected in ErrorRegistry!");
+        }
+    };
+}
+
+#[cfg(feature = "std")]
 /// The "Active Reporter": Focuses on how the error is presented.
 pub trait Liaise: ErrorRegistry {
     // fn prefix() -> &'static str;
@@ -24,8 +42,26 @@ pub trait Liaise: ErrorRegistry {
     fn prefix() -> &'static str {
         Self::PREFIX
     }
-    fn code_id(self) -> u16;
-    fn message(self) -> &'static str;
+    fn code_id(&self) -> u16;
+//     fn message(self) -> &'static str;
+    fn message(&self) -> alloc::string::String;
+
+    fn render(&self) -> alloc::string::String {
+        alloc::format!("[{}{:04}] {}", Self::prefix(), self.code_id(), self.message())
+    }
+}
+
+#[cfg(not(feature = "std"))]
+/// The "Active Reporter": Focuses on how the error is presented.
+pub trait Liaise: ErrorRegistry {
+    // fn prefix() -> &'static str;
+    // Now this can just default to the Registry's prefix!
+    fn prefix() -> &'static str {
+        Self::PREFIX
+    }
+    fn code_id(&self) -> u16;
+//     fn message(&self) -> &'static str;
+    fn message(&self) -> alloc::string::String;
 
     fn render(self) -> alloc::string::String {
         alloc::format!("[{}{:04}] {}", Self::prefix(), self.code_id(), self.message())
