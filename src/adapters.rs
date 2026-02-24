@@ -1,5 +1,6 @@
 #[cfg(feature = "syn-error")]
-mod syn_impls {
+// pub(crate)mod syn_impls {
+pub mod syn_impls {
     use super::*;
     use crate::diagnostic::{Combine, DiagnosticBuffer, Liaise};
     use crate::loc::DiagnosticLoc;

@@ -110,7 +110,6 @@ fn test_no_std_constraints() {
 fn test_std_source_propagation() {
     use alloc::string::{String, ToString}; // Add this to the top of macros.rs
     use std::error::Error;
-    
     let raw_err = std::io::Error::new(std::io::ErrorKind::NotFound, "file missing");
     let err = AbutCode::Io(raw_err);
     
@@ -121,23 +120,24 @@ fn test_std_source_propagation() {
     assert!(trait_obj.source().is_some());
     assert_eq!(trait_obj.source().unwrap().to_string(), "file missing");
 }
-
-#[test]
-fn test_diagnostic_buffer_flow() {
-    use alloc::string::{String, ToString}; // Add this to the top of macros.rs
-    // Mock location for testing
-    #[derive(Clone, Copy)]
-    struct MockLoc;
-    impl crate::loc::DiagnosticLoc for MockLoc {
-        fn source_display(&self) -> String { "line:1".to_string() }
-    }
-    use crate::Combine;
+use alloc::string::String; // Add this to the top of macros.rs
+use crate::Combine;
 impl Combine for String {
     fn combine(&mut self, other: Self) {
         self.push('\n'); // Add a separator
         self.push_str(&other);
     }
 }
+#[test]
+fn test_diagnostic_buffer_flow() {
+use alloc::string::ToString; // Add this to the top of macros.rs
+    // Mock location for testing
+    #[derive(Clone, Copy)]
+    struct MockLoc;
+    impl crate::loc::DiagnosticLoc for MockLoc {
+        fn source_display(&self) -> String { "line:1".to_string() }
+    }
+
     let mut buffer = crate::DiagBuffer::<MockLoc, AbutCode>::new();
     
     // Push a standard error

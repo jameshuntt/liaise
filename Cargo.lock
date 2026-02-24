@@ -26,7 +26,7 @@ dependencies = [
 
 [[package]]
 name = "liaise"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "liaise_derive",
  "proc-macro2",
@@ -36,9 +36,9 @@ dependencies = [
 
 [[package]]
 name = "liaise_derive"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ccf39869d3921bb6ec519e2301b1e9df8f41e7469bc19cf9e2c99f9b8cdaf24"
+checksum = "fbdf212b98d685df541f968c265865e12f7cbcd50c975779d7d668ad4ada9f72"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
