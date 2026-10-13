@@ -145,6 +145,29 @@ impl<L: DiagnosticLoc, R: Liaise> Default for DiagBuffer<L, R> {
 
 pub trait Combine { fn combine(&mut self, other: Self); }
 
+/// A buffer that folds errors of one combinable type into one (the 0.1.x form;
+/// `DiagBuffer` is the located, coded form). `SynBuffer` is this over `syn::Error`.
+pub struct DiagnosticBuffer<E: Combine> {
+    err: Option<E>,
+}
+
+impl<E: Combine> DiagnosticBuffer<E> {
+    pub fn new() -> Self { Self { err: None } }
+    pub fn push(&mut self, new_err: E) {
+        match &mut self.err {
+            Some(existing) => existing.combine(new_err),
+            None => self.err = Some(new_err),
+        }
+    }
+    pub fn finish(self) -> Result<(), E> {
+        match self.err { Some(e) => Err(e), None => Ok(()) }
+    }
+}
+
+impl<E: Combine> Default for DiagnosticBuffer<E> {
+    fn default() -> Self { Self::new() }
+}
+
 impl Combine for String {
     fn combine(&mut self, other: Self) {
         self.push('\n');

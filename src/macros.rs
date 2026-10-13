@@ -1,10 +1,10 @@
 #[macro_export]
 macro_rules! register_liaise_errors {
     (
-        prefix: $prefix:literal,
+        prefix: $prefix:expr,
         name: $name:ident,
         {
-            $($variant:ident = $code:literal => $msg:literal),* $(,)?
+            $($variant:ident = $code:expr => $msg:expr),* $(,)?
         }
     ) => {
         #[derive(Debug, Copy, Clone, $crate::LiaiseCodes)]
@@ -14,11 +14,11 @@ macro_rules! register_liaise_errors {
         }
     };
     (
-        prefix: $prefix:literal,
+        prefix: $prefix:expr,
         vis: $vis:vis,
         name: $name:ident,
         {
-            $($variant:ident = $code:literal => $msg:literal),* $(,)?
+            $($variant:ident = $code:expr => $msg:expr),* $(,)?
         }
     ) => {
         #[derive(Debug, Copy, Clone, $crate::LiaiseCodes)]

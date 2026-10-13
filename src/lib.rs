@@ -27,7 +27,7 @@ pub mod adapters;
 pub mod macros;
 
 pub use diagnostic::{
-    validate_uniqueness, Combine, DiagBuffer, Diagnostic, ErrorRegistry, Liaise,
+    validate_uniqueness, Combine, DiagBuffer, Diagnostic, DiagnosticBuffer, ErrorRegistry, Liaise,
     LiaiseRegistry, LiaiseRegistryError, LiaiseRegistryResult,
 };
 pub use event::{LiaiseAccumulator, LiaiseEvent};

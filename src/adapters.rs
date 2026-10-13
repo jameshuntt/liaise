@@ -1,13 +1,36 @@
 #[cfg(feature = "syn-error")]
 pub mod syn_impls {
-    use crate::diagnostic::{Combine, Liaise};
+    use crate::diagnostic::{Combine, DiagnosticBuffer, Liaise};
+    use crate::loc::DiagnosticLoc;
     use alloc::format;
     use proc_macro2::Span;
     use quote::ToTokens;
     use syn::Error;
 
+    impl DiagnosticLoc for Span {
+        fn source_display(&self) -> alloc::string::String { alloc::format!("{:?}", self) }
+    }
+
     impl Combine for Error {
         fn combine(&mut self, other: Self) { self.combine(other); }
+    }
+
+    /// The proc-macro form of [`DiagnosticBuffer`]: syn errors folded into one.
+    pub type SynBuffer = DiagnosticBuffer<syn::Error>;
+
+    pub trait SynBufferExt {
+        fn push_at<L: Liaise>(&mut self, span: Span, code: L);
+        fn push_at_ctx<L: Liaise>(&mut self, span: Span, code: L, ctx: impl core::fmt::Display);
+        fn push_spanned<L: Liaise>(&mut self, tokens: impl ToTokens, code: L);
+    }
+
+    impl SynBufferExt for SynBuffer {
+        #[inline]
+        fn push_at<L: Liaise>(&mut self, span: Span, code: L) { self.push(err_at(span, code)); }
+        #[inline]
+        fn push_at_ctx<L: Liaise>(&mut self, span: Span, code: L, ctx: impl core::fmt::Display) { self.push(err_at_ctx(span, code, ctx)); }
+        #[inline]
+        fn push_spanned<L: Liaise>(&mut self, tokens: impl ToTokens, code: L) { self.push(err_spanned(tokens, code)); }
     }
 
     pub fn err_at<L: Liaise>(span: Span, code: L) -> Error {
