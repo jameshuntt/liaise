@@ -6,19 +6,28 @@ extern crate std;
 
 extern crate self as liaise;
 
-pub mod adapters;
 pub mod diagnostic;
+pub mod event;
 pub mod loc;
-#[macro_use]pub mod macros;
+pub mod report;
+
+#[cfg(feature = "syn-error")]
+pub mod adapters;
+#[macro_use]
+pub mod macros;
 
 pub use diagnostic::{
-    Combine,
-    DiagBuffer,
-    Diagnostic,
-    ErrorRegistry,
-    Liaise,
-    validate_uniqueness
+    validate_uniqueness, Combine, DiagBuffer, Diagnostic, ErrorRegistry, Liaise,
+    LiaiseRegistry, LiaiseRegistryError, LiaiseRegistryResult,
 };
-pub use loc::DiagnosticLoc;
-
+pub use event::{LiaiseAccumulator, LiaiseEvent};
+pub use loc::{DiagnosticLoc, LineLoc};
+pub use report::{
+    LiaiseDescriptor, LiaiseEvidence, LiaiseReport, LiaiseSeverity, LiaiseStability,
+    LiaiseToken,
+};
+// `LiaiseDigest` is kept as a stable alias; the implementation now lives in the
+// generic `stable_digest` primitive (content-addressing doesn't belong in a
+// diagnostics crate).
+pub use ::stable_digest::StableDigest as LiaiseDigest;
 pub use liaise_derive::{LiaiseCodes, RegisterErrors};
