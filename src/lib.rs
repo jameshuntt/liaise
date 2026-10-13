@@ -6,6 +6,16 @@ extern crate std;
 
 extern crate self as liaise;
 
+/// Paths the derive expands to. Not part of the public API.
+#[doc(hidden)]
+pub mod __private {
+    pub use alloc::{format, vec};
+    pub use alloc::string::{String, ToString};
+    pub use alloc::vec::Vec;
+    pub use core::error::Error;
+    pub use core::option::Option;
+}
+
 pub mod diagnostic;
 pub mod event;
 pub mod loc;
