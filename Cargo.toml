@@ -1,6 +1,6 @@
 [package]
 name = "liaise"
-version = "0.2.3"
+version = "0.2.4"
 edition = "2024"
 
 license = "MIT OR Apache-2.0"
@@ -11,7 +11,7 @@ readme = "readme.md"
 
 [features]
 default = ["std"]
-std = ["liaise_derive/std"]
+std = ["liaise_derive/std", "stable_digest/std"]
 syn-error = ["dep:syn", "dep:proc-macro2", "dep:quote"]
 # The upstream event's wire form (event::LiaiseEvent, LiaiseSeverity), without std.
 serde = ["dep:serde"]
@@ -20,9 +20,9 @@ serde = ["dep:serde"]
 serde_json = "1"
 
 [dependencies]
-stable_digest = { path = "../stable_digest", version = "0.1.0" }
+stable_digest = { path = "../stable_digest", version = "0.1.1", default-features = false }
 syn = { version = "2.0.114", optional = true }
 proc-macro2 = { version = "1.0.106", optional = true }
 quote = { version = "1.0.44", optional = true }
-liaise_derive = { path = "../liaise_derive", version = "0.3.3", default-features = false }
+liaise_derive = { path = "../liaise_derive", version = "0.3.4", default-features = false }
 serde = { version = "1", default-features = false, features = ["derive", "alloc"], optional = true }
