@@ -2,6 +2,7 @@
 name = "liaise"
 version = "0.2.4"
 edition = "2024"
+rust-version = "1.85"
 
 license = "MIT OR Apache-2.0"
 description = "Diagnostic code, report, token, evidence, and digest contracts."

@@ -81,3 +81,8 @@ Liaise splits diagnostic concerns into three layers to maintain `no_std` purity 
 
 ### Pro-Tip: Stability is Key
 Liaise is designed for systems where error codes are **permanent**. By assigning an explicit `u16` to every variant, you ensure that even if you rename the variant in your source code, the error ID remains stable for your users, documentation, and support teams.
+
+## Releasing
+
+Bump `version` in Cargo.toml, add a dated `## <version> (YYYY-MM-DD)` entry to CHANGELOG.md, and push to
+`main`. CI (.github/workflows/ci.yml) runs the tests and clippy, then publishes that version to crates.io.
